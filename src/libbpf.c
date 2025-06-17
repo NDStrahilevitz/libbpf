@@ -13873,7 +13873,7 @@ int perf_buffer__poll(struct perf_buffer *pb, int timeout_ms)
 
     cnt = epoll_wait(pb->epoll_fd, pb->events, pb->cpu_cnt, timeout_ms);
     if (cnt < 0) {
-        pr_info("libbpf: error polling perf buffer: %d\n", errno);
+        pr_warn("libbpf: error polling perf buffer: %d\n", errno);
         return -errno;
     }
 
@@ -13882,7 +13882,7 @@ int perf_buffer__poll(struct perf_buffer *pb, int timeout_ms)
 
         err = perf_buffer__process_records(pb, cpu_buf);
         if (err) {
-            pr_info("error while processing records: %d\n", err);
+            pr_warn("error while processing records: %d\n", err);
             return libbpf_err(err);
         }
     }
