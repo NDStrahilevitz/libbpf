@@ -13878,6 +13878,7 @@ int perf_buffer__poll(struct perf_buffer *pb, int timeout_ms)
     }
 
     for (i = 0; i < cnt; i++) {
+        pr_warn("libbpf: processing record %d\n", i);
         struct perf_cpu_buf *cpu_buf = pb->events[i].data.ptr;
 
         err = perf_buffer__process_records(pb, cpu_buf);
