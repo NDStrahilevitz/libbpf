@@ -13872,14 +13872,17 @@ int perf_buffer__poll(struct perf_buffer *pb, int timeout_ms)
     int i, cnt, err;
 
     cnt = epoll_wait(pb->epoll_fd, pb->events, pb->cpu_cnt, timeout_ms);
-    if (cnt < 0)
+    if (cnt < 0) {
+        printf("libbpfgo: error polling perf buffer: %d\n", errno);
         return -errno;
+    }
 
     for (i = 0; i < cnt; i++) {
         struct perf_cpu_buf *cpu_buf = pb->events[i].data.ptr;
 
         err = perf_buffer__process_records(pb, cpu_buf);
         if (err) {
+            printf("libbpfgo: error while processing records: %d\n", err);
             pr_warn("error while processing records: %d\n", err);
             return libbpf_err(err);
         }
